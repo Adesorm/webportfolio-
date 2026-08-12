@@ -5,11 +5,10 @@ import "notyf/notyf.min.css";
 
 const notyf = new Notyf();
 
-const WEB3FORMS_ACCESS_KEY = "d73298de-1877-445e-b2d3-8f1384356f4b";
-
+// =====================================================
+// reCAPTCHA v2 SITE KEY
+// =====================================================
 const RECAPTCHA_SITE_KEY = "6LdZhIItAAAAALFFVDBENl6NZvXAnVNDQFH2EiAT";
-
-const subject = "New message from Portfolio Contact Form";
 
 const form = reactive({
   name: "",
@@ -22,10 +21,9 @@ const isLoading = ref(false);
 const recaptchaContainer = ref(null);
 const recaptchaWidgetId = ref(null);
 
-// ==========================================
-// WAIT FOR GOOGLE reCAPTCHA
-// ==========================================
-
+// =====================================================
+// WAIT FOR GOOGLE reCAPTCHA TO LOAD
+// =====================================================
 const waitForRecaptcha = () => {
   return new Promise((resolve, reject) => {
     let attempts = 0;
@@ -51,23 +49,23 @@ const waitForRecaptcha = () => {
   });
 };
 
-// ==========================================
-// RENDER reCAPTCHA v2
-// ==========================================
-
+// =====================================================
+// RENDER reCAPTCHA v2 CHECKBOX
+// =====================================================
 const renderRecaptcha = async () => {
   await nextTick();
 
   if (!window.grecaptcha) {
-    console.error("reCAPTCHA has not loaded.");
+    console.error("Google reCAPTCHA is not available.");
     return;
   }
 
   if (!recaptchaContainer.value) {
-    console.error("reCAPTCHA container not found.");
+    console.error("reCAPTCHA container was not found.");
     return;
   }
 
+  // Prevent rendering it more than once
   if (recaptchaWidgetId.value !== null) {
     return;
   }
@@ -76,12 +74,13 @@ const renderRecaptcha = async () => {
     sitekey: RECAPTCHA_SITE_KEY,
     theme: "light",
   });
+
+  console.log("reCAPTCHA rendered successfully:", recaptchaWidgetId.value);
 };
 
-// ==========================================
+// =====================================================
 // INITIALIZE reCAPTCHA
-// ==========================================
-
+// =====================================================
 onMounted(async () => {
   try {
     await waitForRecaptcha();
@@ -91,17 +90,26 @@ onMounted(async () => {
   }
 });
 
-// ==========================================
+// =====================================================
 // SEND MESSAGE
-// ==========================================
-
+// =====================================================
 const sendMessage = async () => {
   if (isLoading.value) return;
 
-  const recaptchaResponse = window.grecaptcha?.getResponse(
+  // Make sure reCAPTCHA exists
+  if (!window.grecaptcha || recaptchaWidgetId.value === null) {
+    notyf.error(
+      "reCAPTCHA is not ready. Please refresh the page and try again.",
+    );
+    return;
+  }
+
+  // Get the user's v2 checkbox token
+  const recaptchaResponse = window.grecaptcha.getResponse(
     recaptchaWidgetId.value,
   );
 
+  // User has not checked the box
   if (!recaptchaResponse) {
     notyf.error("Please complete the reCAPTCHA before sending.");
     return;
@@ -110,40 +118,42 @@ const sendMessage = async () => {
   isLoading.value = true;
 
   try {
-    const response = await fetch("https://api.web3forms.com/submit", {
+    // Send everything to our Vercel API
+    const response = await fetch("/api/contact", {
       method: "POST",
-
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
       },
-
       body: JSON.stringify({
-        access_key: WEB3FORMS_ACCESS_KEY,
-        subject: subject,
         name: form.name,
         email: form.email,
         message: form.message,
-        recaptcha_response: recaptchaResponse,
+        recaptchaToken: recaptchaResponse,
       }),
     });
 
     const result = await response.json();
 
-    console.log("Web3Forms response:", result);
+    console.log("Contact API response:", result);
 
-    if (result.success) {
+    if (response.ok && result.success) {
       notyf.success("Message Sent!");
 
+      // Clear form
       form.name = "";
       form.email = "";
       form.message = "";
 
+      // Reset reCAPTCHA
       window.grecaptcha.reset(recaptchaWidgetId.value);
     } else {
-      console.error("Web3Forms error:", result);
+      console.error("Contact API error:", result);
 
       notyf.error(result.message || "Failed to send message.");
+
+      // Reset CAPTCHA so user can try again
+      window.grecaptcha.reset(recaptchaWidgetId.value);
     }
   } catch (error) {
     console.error("Contact form error:", error);

@@ -8,7 +8,7 @@ const notyf = new Notyf();
 // ==========================================
 // KEYS
 // ==========================================
-
+const WEB3FORMS_ACCESS_KEY = "d73298de-1877-445e-b2d3-8f1384356f4b";
 // Google reCAPTCHA v2 SITE key
 const RECAPTCHA_SITE_KEY = "6LdhmoItAAAAAG8XTtxjZkr5_wl0iXVc7JyU5IO1";
 
@@ -102,17 +102,20 @@ onMounted(async () => {
 const sendMessage = async () => {
   if (isLoading.value) return;
 
-  const recaptchaResponse = window.grecaptcha?.getResponse(
-    recaptchaWidgetId.value
-  );
-
-  if (!recaptchaResponse) {
-    notyf.error("Please complete the reCAPTCHA before sending.");
+  if (!form.name || !form.email || !form.message) {
+    notyf.error("Please fill out all fields.");
     return;
   }
 
-  if (!form.name || !form.email || !form.message) {
-    notyf.error("Please fill out all fields.");
+  const recaptchaResponse =
+    window.grecaptcha?.getResponse(
+      recaptchaWidgetId.value
+    );
+
+  if (!recaptchaResponse) {
+    notyf.error(
+      "Please complete the reCAPTCHA before sending."
+    );
     return;
   }
 
@@ -144,22 +147,48 @@ const sendMessage = async () => {
       form.email = "";
       form.message = "";
 
-      window.grecaptcha.reset(recaptchaWidgetId.value);
+      // Reset reCAPTCHA after successful submission
+      window.grecaptcha.reset(
+        recaptchaWidgetId.value
+      );
     } else {
       console.error("Contact API error:", result);
 
       notyf.error(
-        result.message || "Failed to send your message."
+        result.message ||
+          "Failed to send your message."
+      );
+
+      // IMPORTANT:
+      // Reset the reCAPTCHA after a failed verification
+      window.grecaptcha.reset(
+        recaptchaWidgetId.value
       );
     }
   } catch (error) {
-    console.error("Contact form error:", error);
+    console.error(
+      "Contact form error:",
+      error
+    );
 
-    notyf.error("Unable to send message. Please try again.");
+    notyf.error(
+      "Unable to send message. Please try again."
+    );
+
+    // Reset CAPTCHA if request itself fails
+    if (
+      window.grecaptcha &&
+      recaptchaWidgetId.value !== null
+    ) {
+      window.grecaptcha.reset(
+        recaptchaWidgetId.value
+      );
+    }
   } finally {
     isLoading.value = false;
   }
 };
+ 
 </script>
 
 <template>

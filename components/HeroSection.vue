@@ -1,13 +1,8 @@
 <template>
-  <section
-    id="landing"
-    class="hero-section"
-  >
+  <section id="landing" class="hero-section">
     <div class="hero-container">
-
       <!-- Left: Text -->
       <div class="hero-content">
-
         <div class="availability">
           <span class="availability-dot"></span>
           Available for hire
@@ -25,55 +20,40 @@
           </h1>
 
           <p>
-            Crafting high-performance web applications with a blend of
-            technical precision and creative design. I turn complex problems
-            into elegant, coffee-fueled solutions.
+            Crafting high-performance web applications with a blend of technical
+            precision and creative design. I turn complex problems into elegant,
+            coffee-fueled solutions.
           </p>
         </div>
 
-       <div class="hero-buttons">
-         <a href="#projects" class="primary-button">
-           View Portfolio
-         </a>
+        <div class="hero-buttons">
+          <a href="#projects" class="primary-button"> View Portfolio </a>
 
-        <a
-          href="/Adesorm-Cabanisan-Resume.pdf"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="secondary-button"
-        >
-          View Resume
-        </a>
+          <a
+            href="/Adesorm-Cabanisan-Resume.pdf"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="secondary-button"
+          >
+            View Resume
+          </a>
 
-         <a href="#contact" class="secondary-button">
-           Let's Talk
-         </a>
-       </div>
-
+          <a href="#contact" class="secondary-button"> Let's Talk </a>
+        </div>
       </div>
 
       <!-- Right: Profile Image -->
       <div class="hero-image-wrapper">
-
         <div class="hero-glow"></div>
 
         <div class="hero-image">
-          <img
-            src="/images/Adesorm1.png"
-            alt="Adesorm Cabanisan"
-          />
+          <img src="/images/adesorm1.png" alt="Adesorm Cabanisan" />
         </div>
 
-        <span class="decorative-bracket bracket-left">
-          {
-        </span>
+        <span class="decorative-bracket bracket-left"> { </span>
 
-        <span class="decorative-bracket bracket-right">
-          }
-        </span>
-
+        <span class="decorative-bracket bracket-right"> } </span>
       </div>
-
     </div>
   </section>
 </template>
@@ -122,7 +102,7 @@
 
   color: #00629d;
 
-  font-family: 'JetBrains Mono', monospace;
+  font-family: "JetBrains Mono", monospace;
   font-size: 14px;
   font-weight: 500;
   letter-spacing: 0.05em;
@@ -148,7 +128,7 @@
 
   color: #111c2c;
 
-  font-family: 'Hanken Grotesk', sans-serif;
+  font-family: "Hanken Grotesk", sans-serif;
   font-size: clamp(42px, 5vw, 64px);
   line-height: 1.1;
   letter-spacing: -0.02em;
@@ -165,7 +145,7 @@
 
   color: #3f4852;
 
-  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-family: "Plus Jakarta Sans", sans-serif;
   font-size: 18px;
   line-height: 1.6;
 }
@@ -187,7 +167,7 @@
 
   border-radius: 8px;
 
-  font-family: 'Hanken Grotesk', sans-serif;
+  font-family: "Hanken Grotesk", sans-serif;
   font-size: 16px;
   font-weight: 700;
 

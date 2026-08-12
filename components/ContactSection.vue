@@ -1,104 +1,128 @@
 <script setup>
-import { reactive, ref } from 'vue'
-import { Notyf } from 'notyf'
-import 'notyf/notyf.min.css'
+import { reactive, ref } from "vue";
+import { Notyf } from "notyf";
+import "notyf/notyf.min.css";
 
-const notyf = new Notyf()
+const notyf = new Notyf();
 
-const WEB3FORMS_ACCESS_KEY = 'd73298de-1877-445e-b2d3-8f1384356f4b'
-const subject = 'New message from Portfolio Contact Form'
+const WEB3FORMS_ACCESS_KEY = "d73298de-1877-445e-b2d3-8f1384356f4b";
+
+const RECAPTCHA_SITE_KEY = "6LcidoItAAAAAAQNIAr53Cs92q2bNOtv3ak2bLls";
+
+const subject = "New message from Portfolio Contact Form";
 
 const form = reactive({
-  name: '',
-  email: '',
-  message: ''
-})
+  name: "",
+  email: "",
+  message: "",
+});
 
-const isLoading = ref(false)
+const isLoading = ref(false);
+
+const getRecaptchaToken = () => {
+  return new Promise((resolve, reject) => {
+    if (!window.grecaptcha) {
+      reject(new Error("reCAPTCHA has not loaded yet."));
+      return;
+    }
+
+    window.grecaptcha.ready(() => {
+      window.grecaptcha
+        .execute(RECAPTCHA_SITE_KEY, {
+          action: "contact",
+        })
+        .then((token) => {
+          resolve(token);
+        })
+        .catch((error) => {
+          reject(error);
+        });
+    });
+  });
+};
 
 const sendMessage = async () => {
-  isLoading.value = true
+  if (isLoading.value) return;
+
+  isLoading.value = true;
 
   try {
-    const response = await fetch(
-      'https://api.web3forms.com/submit',
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Accept: 'application/json'
-        },
-        body: JSON.stringify({
-          access_key: WEB3FORMS_ACCESS_KEY,
-          subject: subject,
-          name: form.name,
-          email: form.email,
-          message: form.message
-        })
-      }
-    )
+    // Get a fresh reCAPTCHA token when the user submits
+    const recaptchaToken = await getRecaptchaToken();
 
-    const result = await response.json()
+    const response = await fetch("https://api.web3forms.com/submit", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+      body: JSON.stringify({
+        access_key: WEB3FORMS_ACCESS_KEY,
+        subject: subject,
+        name: form.name,
+        email: form.email,
+        message: form.message,
+        recaptcha_response: recaptchaToken,
+      }),
+    });
+
+    const result = await response.json();
 
     if (result.success) {
-      notyf.success('Message Sent!')
+      notyf.success("Message Sent!");
 
-      form.name = ''
-      form.email = ''
-      form.message = ''
+      form.name = "";
+      form.email = "";
+      form.message = "";
     } else {
-      notyf.error('Failed to send message.')
+      console.error("Web3Forms error:", result);
+
+      notyf.error(result.message || "Failed to send message.");
     }
   } catch (error) {
-    console.error(error)
-    notyf.error('Failed to send message.')
+    console.error("Contact form error:", error);
+
+    notyf.error("Unable to send message. Please try again.");
   } finally {
-    isLoading.value = false
+    isLoading.value = false;
   }
-}
+};
 </script>
 <template>
   <section id="contact" class="contact-section">
     <div class="contact-container">
-
       <!-- Left side -->
       <div class="contact-info">
         <h2>Let's talk over coffee</h2>
 
         <p class="contact-description">
-          Have a project in mind or just want to chat about the latest
-          tech? My inbox is always open.
+          Have a project in mind or just want to chat about the latest tech? My
+          inbox is always open.
         </p>
 
         <!-- Email -->
         <div class="contact-detail">
           <div class="contact-icon">
-            <span class="material-symbols-outlined">
-              mail
-            </span>
+            <span class="material-symbols-outlined"> mail </span>
           </div>
 
           <div>
             <span class="detail-label">EMAIL ME</span>
-            <a href="mailto:cadesorm@gmail.com">
-              cadesorm@gmail.com
-            </a>
+
+            <a href="mailto:cadesorm@gmail.com"> cadesorm@gmail.com </a>
           </div>
         </div>
 
         <!-- Location -->
         <div class="contact-detail">
           <div class="contact-icon">
-            <span class="material-symbols-outlined">
-              location_on
-            </span>
+            <span class="material-symbols-outlined"> location_on </span>
           </div>
 
           <div>
             <span class="detail-label">LOCATION</span>
-            <span class="location-text">
-              Salcedo, Ilocos Sur
-            </span>
+
+            <span class="location-text"> Salcedo, Ilocos Sur </span>
           </div>
         </div>
 
@@ -109,18 +133,14 @@ const sendMessage = async () => {
             loading="lazy"
             allowfullscreen
             referrerpolicy="no-referrer-when-downgrade"
+            title="Map showing Salcedo, Ilocos Sur"
           ></iframe>
         </div>
       </div>
 
       <!-- Right side -->
-      <form
-        class="contact-form"
-        @submit.prevent="sendMessage"
-      >
-
+      <form class="contact-form" @submit.prevent="sendMessage">
         <div class="form-row">
-
           <!-- Name -->
           <div class="form-group">
             <label for="name">NAME</label>
@@ -130,6 +150,7 @@ const sendMessage = async () => {
               v-model="form.name"
               type="text"
               placeholder="Full name"
+              autocomplete="name"
               required
             />
           </div>
@@ -143,10 +164,10 @@ const sendMessage = async () => {
               v-model="form.email"
               type="email"
               placeholder="john@example.com"
+              autocomplete="email"
               required
             />
           </div>
-
         </div>
 
         <!-- Message -->
@@ -157,24 +178,19 @@ const sendMessage = async () => {
             id="message"
             v-model="form.message"
             placeholder="Tell me about your project..."
+            autocomplete="off"
             required
           ></textarea>
         </div>
 
         <!-- Submit -->
-        <button
-          type="submit"
-          :disabled="isLoading"
-        >
+        <button type="submit" :disabled="isLoading">
           {{ isLoading ? "Sending..." : "Send Message" }}
         </button>
-
       </form>
-
     </div>
   </section>
 </template>
-
 <style scoped>
 .contact-section {
   padding: 90px 24px 120px;
@@ -212,7 +228,7 @@ const sendMessage = async () => {
 
   color: #111c2c;
 
-  font-family: 'Hanken Grotesk', sans-serif;
+  font-family: "Hanken Grotesk", sans-serif;
   font-size: 48px;
   line-height: 1.15;
   font-weight: 700;
@@ -225,7 +241,7 @@ const sendMessage = async () => {
 
   color: #3f4852;
 
-  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-family: "Plus Jakarta Sans", sans-serif;
   font-size: 17px;
   line-height: 1.6;
 }
@@ -265,7 +281,7 @@ const sendMessage = async () => {
 
   color: #00629d;
 
-  font-family: 'JetBrains Mono', monospace;
+  font-family: "JetBrains Mono", monospace;
   font-size: 12px;
   letter-spacing: 0.08em;
 }
@@ -274,7 +290,7 @@ const sendMessage = async () => {
 .location-text {
   color: #111c2c;
 
-  font-family: 'Hanken Grotesk', sans-serif;
+  font-family: "Hanken Grotesk", sans-serif;
   font-size: 18px;
   font-weight: 600;
 
@@ -328,7 +344,7 @@ const sendMessage = async () => {
 
   color: #244a64;
 
-  font-family: 'JetBrains Mono', monospace;
+  font-family: "JetBrains Mono", monospace;
   font-size: 12px;
   font-weight: 500;
   letter-spacing: 0.08em;
@@ -349,7 +365,7 @@ const sendMessage = async () => {
 
   color: #111c2c;
 
-  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-family: "Plus Jakarta Sans", sans-serif;
   font-size: 16px;
 
   outline: none;
@@ -397,7 +413,7 @@ const sendMessage = async () => {
   background: #00629d;
   color: #ffffff;
 
-  font-family: 'Hanken Grotesk', sans-serif;
+  font-family: "Hanken Grotesk", sans-serif;
   font-size: 18px;
   font-weight: 700;
 
@@ -460,4 +476,3 @@ const sendMessage = async () => {
   }
 }
 </style>
-

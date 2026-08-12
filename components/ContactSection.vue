@@ -1,5 +1,5 @@
 <script setup>
-import { reactive, ref } from "vue";
+import { reactive, ref, onMounted, nextTick } from "vue";
 import { Notyf } from "notyf";
 import "notyf/notyf.min.css";
 
@@ -7,7 +7,7 @@ const notyf = new Notyf();
 
 const WEB3FORMS_ACCESS_KEY = "d73298de-1877-445e-b2d3-8f1384356f4b";
 
-const RECAPTCHA_SITE_KEY = "6LcidoItAAAAAAQNIAr53Cs92q2bNOtv3ak2bLls";
+const RECAPTCHA_SITE_KEY = "YOUR_V2_SITE_KEY";
 
 const subject = "New message from Portfolio Contact Form";
 
@@ -19,54 +19,118 @@ const form = reactive({
 
 const isLoading = ref(false);
 
-const getRecaptchaToken = () => {
-  return new Promise((resolve, reject) => {
-    if (!window.grecaptcha) {
-      reject(new Error("reCAPTCHA has not loaded yet."));
-      return;
-    }
+const recaptchaContainer = ref(null);
+const recaptchaWidgetId = ref(null);
 
-    window.grecaptcha.ready(() => {
-      window.grecaptcha
-        .execute(RECAPTCHA_SITE_KEY, {
-          action: "contact",
-        })
-        .then((token) => {
-          resolve(token);
-        })
-        .catch((error) => {
-          reject(error);
-        });
-    });
+// ==========================================
+// WAIT FOR GOOGLE reCAPTCHA
+// ==========================================
+
+const waitForRecaptcha = () => {
+  return new Promise((resolve, reject) => {
+    let attempts = 0;
+    const maxAttempts = 100;
+
+    const check = () => {
+      if (window.grecaptcha) {
+        resolve();
+        return;
+      }
+
+      attempts++;
+
+      if (attempts >= maxAttempts) {
+        reject(new Error("reCAPTCHA failed to load."));
+        return;
+      }
+
+      setTimeout(check, 100);
+    };
+
+    check();
   });
 };
+
+// ==========================================
+// RENDER reCAPTCHA v2
+// ==========================================
+
+const renderRecaptcha = async () => {
+  await nextTick();
+
+  if (!window.grecaptcha) {
+    console.error("reCAPTCHA has not loaded.");
+    return;
+  }
+
+  if (!recaptchaContainer.value) {
+    console.error("reCAPTCHA container not found.");
+    return;
+  }
+
+  if (recaptchaWidgetId.value !== null) {
+    return;
+  }
+
+  recaptchaWidgetId.value = window.grecaptcha.render(recaptchaContainer.value, {
+    sitekey: RECAPTCHA_SITE_KEY,
+    theme: "light",
+  });
+};
+
+// ==========================================
+// INITIALIZE reCAPTCHA
+// ==========================================
+
+onMounted(async () => {
+  try {
+    await waitForRecaptcha();
+    await renderRecaptcha();
+  } catch (error) {
+    console.error("reCAPTCHA initialization error:", error);
+  }
+});
+
+// ==========================================
+// SEND MESSAGE
+// ==========================================
 
 const sendMessage = async () => {
   if (isLoading.value) return;
 
+  const recaptchaResponse = window.grecaptcha?.getResponse(
+    recaptchaWidgetId.value,
+  );
+
+  if (!recaptchaResponse) {
+    notyf.error("Please complete the reCAPTCHA before sending.");
+    return;
+  }
+
   isLoading.value = true;
 
   try {
-    // Get a fresh reCAPTCHA token when the user submits
-    const recaptchaToken = await getRecaptchaToken();
-
     const response = await fetch("https://api.web3forms.com/submit", {
       method: "POST",
+
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
       },
+
       body: JSON.stringify({
         access_key: WEB3FORMS_ACCESS_KEY,
         subject: subject,
         name: form.name,
         email: form.email,
         message: form.message,
-        recaptcha_response: recaptchaToken,
+        recaptcha_response: recaptchaResponse,
       }),
     });
 
     const result = await response.json();
+
+    console.log("Web3Forms response:", result);
 
     if (result.success) {
       notyf.success("Message Sent!");
@@ -74,6 +138,8 @@ const sendMessage = async () => {
       form.name = "";
       form.email = "";
       form.message = "";
+
+      window.grecaptcha.reset(recaptchaWidgetId.value);
     } else {
       console.error("Web3Forms error:", result);
 
@@ -88,10 +154,12 @@ const sendMessage = async () => {
   }
 };
 </script>
+
 <template>
   <section id="contact" class="contact-section">
     <div class="contact-container">
-      <!-- Left side -->
+      <!-- LEFT SIDE -->
+
       <div class="contact-info">
         <h2>Let's talk over coffee</h2>
 
@@ -100,33 +168,36 @@ const sendMessage = async () => {
           inbox is always open.
         </p>
 
-        <!-- Email -->
+        <!-- EMAIL -->
+
         <div class="contact-detail">
           <div class="contact-icon">
             <span class="material-symbols-outlined"> mail </span>
           </div>
 
           <div>
-            <span class="detail-label">EMAIL ME</span>
+            <span class="detail-label"> EMAIL ME </span>
 
             <a href="mailto:cadesorm@gmail.com"> cadesorm@gmail.com </a>
           </div>
         </div>
 
-        <!-- Location -->
+        <!-- LOCATION -->
+
         <div class="contact-detail">
           <div class="contact-icon">
             <span class="material-symbols-outlined"> location_on </span>
           </div>
 
           <div>
-            <span class="detail-label">LOCATION</span>
+            <span class="detail-label"> LOCATION </span>
 
             <span class="location-text"> Salcedo, Ilocos Sur </span>
           </div>
         </div>
 
-        <!-- Map -->
+        <!-- MAP -->
+
         <div class="map-container">
           <iframe
             src="https://www.google.com/maps?q=Salcedo,Ilocos%20Sur&output=embed"
@@ -138,12 +209,14 @@ const sendMessage = async () => {
         </div>
       </div>
 
-      <!-- Right side -->
+      <!-- RIGHT SIDE -->
+
       <form class="contact-form" @submit.prevent="sendMessage">
         <div class="form-row">
-          <!-- Name -->
+          <!-- NAME -->
+
           <div class="form-group">
-            <label for="name">NAME</label>
+            <label for="name"> NAME </label>
 
             <input
               id="name"
@@ -155,9 +228,10 @@ const sendMessage = async () => {
             />
           </div>
 
-          <!-- Email -->
+          <!-- EMAIL -->
+
           <div class="form-group">
-            <label for="email">EMAIL</label>
+            <label for="email"> EMAIL </label>
 
             <input
               id="email"
@@ -170,9 +244,10 @@ const sendMessage = async () => {
           </div>
         </div>
 
-        <!-- Message -->
+        <!-- MESSAGE -->
+
         <div class="form-group message-group">
-          <label for="message">MESSAGE</label>
+          <label for="message"> MESSAGE </label>
 
           <textarea
             id="message"
@@ -183,7 +258,14 @@ const sendMessage = async () => {
           ></textarea>
         </div>
 
-        <!-- Submit -->
+        <!-- GOOGLE reCAPTCHA V2 -->
+
+        <div class="recaptcha-wrapper">
+          <div ref="recaptchaContainer" class="recaptcha-container"></div>
+        </div>
+
+        <!-- SUBMIT -->
+
         <button type="submit" :disabled="isLoading">
           {{ isLoading ? "Sending..." : "Send Message" }}
         </button>

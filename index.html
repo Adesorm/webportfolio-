@@ -155,8 +155,12 @@
     <!-- Tailwind -->
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
 
-    <!-- Google reCAPTCHA v3 -->
-    <script src="https://www.google.com/recaptcha/api.js?render=6LcidoItAAAAAAQNIAr53Cs92q2bNOtv3ak2bLls"></script>
+    <!-- Google reCAPTCHA v2 - Explicit Rendering -->
+    <script
+      src="https://www.google.com/recaptcha/api.js?render=explicit"
+      async
+      defer
+    ></script>
 
     <!-- Favicon -->
     <link rel="icon" type="image/x-icon" href="/favicon.ico" />
@@ -167,7 +171,7 @@
   >
     <div id="app"></div>
 
-    <!-- IMPORTANT: main.js is in the activity folder -->
+    <!-- Vue / Vite -->
     <script type="module" src="/main.js"></script>
   </body>
 </html>

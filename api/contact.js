@@ -9,7 +9,9 @@ export default async function handler(req, res) {
   try {
     const { name, email, message, recaptchaToken } = req.body;
 
-    // Basic validation
+    // ==============================
+    // BASIC VALIDATION
+    // ==============================
     if (!name || !email || !message || !recaptchaToken) {
       return res.status(400).json({
         success: false,
@@ -17,10 +19,9 @@ export default async function handler(req, res) {
       });
     }
 
-    // ==========================================
-    // 1. VERIFY reCAPTCHA
-    // ==========================================
-
+    // ==============================
+    // 1. VERIFY GOOGLE reCAPTCHA
+    // ==============================
     const googleResponse = await fetch(
       "https://www.google.com/recaptcha/api/siteverify",
       {
@@ -44,12 +45,11 @@ export default async function handler(req, res) {
 
     try {
       googleResult = JSON.parse(googleText);
-    } catch (error) {
-      console.error("Google returned non-JSON:", googleText);
-
+    } catch {
       return res.status(500).json({
         success: false,
-        message: "Google reCAPTCHA verification returned an invalid response.",
+        message: "Google reCAPTCHA returned an invalid response.",
+        debug: googleText,
       });
     }
 
@@ -58,14 +58,14 @@ export default async function handler(req, res) {
 
       return res.status(400).json({
         success: false,
-        message: "reCAPTCHA verification failed. Please try again.",
+        message: "reCAPTCHA verification failed.",
+        debug: googleResult,
       });
     }
 
-    // ==========================================
-    // 2. SEND THROUGH WEB3FORMS
-    // ==========================================
-
+    // ==============================
+    // 2. SEND TO WEB3FORMS
+    // ==============================
     const web3Response = await fetch("https://api.web3forms.com/submit", {
       method: "POST",
       headers: {
@@ -75,43 +75,50 @@ export default async function handler(req, res) {
       body: JSON.stringify({
         access_key: process.env.WEB3FORMS_ACCESS_KEY,
         subject: "New message from Portfolio Contact Form",
-        name,
-        email,
-        message,
+        name: name,
+        email: email,
+        message: message,
       }),
     });
 
     const web3Text = await web3Response.text();
 
-    console.log("Web3Forms status:", web3Response.status);
-    console.log("Web3Forms response:", web3Text);
+    console.log("=================================");
+    console.log("Web3Forms HTTP status:", web3Response.status);
+    console.log("Web3Forms raw response:", web3Text);
+    console.log("=================================");
 
     let web3Result;
 
     try {
       web3Result = JSON.parse(web3Text);
-    } catch (error) {
-      console.error("Web3Forms returned non-JSON:", web3Text);
-
+    } catch {
       return res.status(500).json({
         success: false,
-        message: "Web3Forms returned an invalid response.",
+        message: "Web3Forms returned a non-JSON response.",
+        debug: web3Text,
       });
     }
 
+    // ==============================
+    // 3. WEB3FORMS ERROR
+    // ==============================
     if (!web3Result.success) {
-      console.error("Web3Forms error:", web3Result);
+      console.error("Web3Forms rejected request:", web3Result);
 
       return res.status(500).json({
         success: false,
-        message: web3Result.message || "Failed to send your message.",
+        message:
+          web3Result.message ||
+          web3Result.body?.message ||
+          "Web3Forms rejected the request.",
+        debug: web3Result,
       });
     }
 
-    // ==========================================
-    // SUCCESS
-    // ==========================================
-
+    // ==============================
+    // 4. SUCCESS
+    // ==============================
     return res.status(200).json({
       success: true,
       message: "Message sent successfully!",
@@ -122,6 +129,7 @@ export default async function handler(req, res) {
     return res.status(500).json({
       success: false,
       message: "Server error. Please try again later.",
+      debug: error.message,
     });
   }
 }

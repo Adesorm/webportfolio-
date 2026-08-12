@@ -9,9 +9,6 @@ const notyf = new Notyf();
 // KEYS
 // ==========================================
 
-// Web3Forms access key
-const WEB3FORMS_ACCESS_KEY = "YOUR_WEB3FORMS_ACCESS_KEY";
-
 // Google reCAPTCHA v2 SITE key
 const RECAPTCHA_SITE_KEY = "6LdhmoItAAAAAG8XTtxjZkr5_wl0iXVc7JyU5IO1";
 
@@ -103,82 +100,62 @@ onMounted(async () => {
 // ==========================================
 
 const sendMessage = async () => {
-  if (isLoading.value) {
-    return;
-  }
+  if (isLoading.value) return;
 
-  // Make sure reCAPTCHA exists
-  if (!window.grecaptcha || recaptchaWidgetId.value === null) {
-    notyf.error(
-      "reCAPTCHA is not ready. Please refresh the page and try again.",
-    );
-    return;
-  }
-
-  // Get reCAPTCHA v2 token
-  const recaptchaResponse = window.grecaptcha.getResponse(
-    recaptchaWidgetId.value,
+  const recaptchaResponse = window.grecaptcha?.getResponse(
+    recaptchaWidgetId.value
   );
 
-  // User did not complete CAPTCHA
   if (!recaptchaResponse) {
     notyf.error("Please complete the reCAPTCHA before sending.");
+    return;
+  }
+
+  if (!form.name || !form.email || !form.message) {
+    notyf.error("Please fill out all fields.");
     return;
   }
 
   isLoading.value = true;
 
   try {
-    // ==========================================
-    // SEND DIRECTLY TO WEB3FORMS
-    // ==========================================
-
-    const response = await fetch("https://api.web3forms.com/submit", {
+    const response = await fetch("/api/contact", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
       },
       body: JSON.stringify({
-        access_key: WEB3FORMS_ACCESS_KEY,
-        subject: "New message from Portfolio Contact Form",
         name: form.name,
         email: form.email,
         message: form.message,
+        recaptchaToken: recaptchaResponse,
       }),
     });
 
     const result = await response.json();
 
-    console.log("Web3Forms response:", result);
+    console.log("Contact API response:", result);
 
-    if (response.ok && result.success) {
+    if (result.success) {
       notyf.success("Message Sent!");
 
-      // Clear form
       form.name = "";
       form.email = "";
       form.message = "";
 
-      // Reset CAPTCHA
       window.grecaptcha.reset(recaptchaWidgetId.value);
     } else {
-      console.error("Web3Forms error:", result);
+      console.error("Contact API error:", result);
 
-      notyf.error(result.message || "Failed to send message.");
-
-      // Reset CAPTCHA
-      window.grecaptcha.reset(recaptchaWidgetId.value);
+      notyf.error(
+        result.message || "Failed to send your message."
+      );
     }
   } catch (error) {
     console.error("Contact form error:", error);
 
     notyf.error("Unable to send message. Please try again.");
-
-    // Reset CAPTCHA
-    if (window.grecaptcha && recaptchaWidgetId.value !== null) {
-      window.grecaptcha.reset(recaptchaWidgetId.value);
-    }
   } finally {
     isLoading.value = false;
   }

@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+
+<html class="scroll-smooth" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Adesorm Cabanisan | Web Developer Portfolio</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700;800&amp;family=Plus+Jakarta+Sans:wght@400;500;600&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface": "#f9f9ff",
+                        "on-surface-variant": "#3f4852",
+                        "secondary": "#3d627d",
+                        "on-secondary": "#ffffff",
+                        "tertiary-fixed": "#dbe4e8",
+                        "on-background": "#111c2c",
+                        "surface-container": "#e7eeff",
+                        "on-tertiary-container": "#2d3539",
+                        "on-secondary-fixed-variant": "#244a64",
+                        "on-primary-container": "#00375a",
+                        "outline": "#6f7883",
+                        "on-error-container": "#93000a",
+                        "outline-variant": "#bec7d4",
+                        "primary": "#00629d",
+                        "secondary-container": "#b9dffe",
+                        "tertiary": "#576063",
+                        "primary-container": "#00a3ff",
+                        "secondary-fixed": "#cae6ff",
+                        "secondary-fixed-dim": "#a5cbea",
+                        "primary-fixed-dim": "#98cbff",
+                        "on-tertiary-fixed": "#141d20",
+                        "surface-container-highest": "#d8e3fa",
+                        "on-tertiary-fixed-variant": "#3f484b",
+                        "surface-tint": "#00629d",
+                        "surface-container-high": "#dee8ff",
+                        "inverse-surface": "#263142",
+                        "inverse-on-surface": "#ebf1ff",
+                        "surface-variant": "#d8e3fa",
+                        "on-secondary-fixed": "#001e2f",
+                        "surface-container-lowest": "#ffffff",
+                        "error": "#ba1a1a",
+                        "surface-bright": "#f9f9ff",
+                        "on-primary-fixed-variant": "#004a77",
+                        "on-primary": "#ffffff",
+                        "on-secondary-container": "#3e637e",
+                        "on-error": "#ffffff",
+                        "surface-container-low": "#f0f3ff",
+                        "on-tertiary": "#ffffff",
+                        "on-surface": "#111c2c",
+                        "error-container": "#ffdad6",
+                        "inverse-primary": "#98cbff",
+                        "primary-fixed": "#cfe5ff",
+                        "tertiary-container": "#959ea2",
+                        "surface-dim": "#cfdaf1",
+                        "tertiary-fixed-dim": "#bfc8cc",
+                        "on-primary-fixed": "#001d33",
+                        "background": "#f9f9ff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "section-padding-mobile": "64px",
+                        "container-max-width": "1200px",
+                        "base": "8px",
+                        "section-padding-desktop": "120px",
+                        "gutter": "24px"
+                    },
+                    "fontFamily": {
+                        "label-mono": ["JetBrains Mono"],
+                        "headline-xl": ["Hanken Grotesk"],
+                        "nav-link": ["Hanken Grotesk"],
+                        "headline-lg-mobile": ["Hanken Grotesk"],
+                        "body-md": ["Plus Jakarta Sans"],
+                        "headline-lg": ["Hanken Grotesk"]
+                    },
+                    "fontSize": {
+                        "label-mono": ["14px", {"lineHeight": "1.5", "letterSpacing": "0.05em", "fontWeight": "500"}],
+                        "headline-xl": ["64px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+                        "nav-link": ["16px", {"lineHeight": "1.0", "fontWeight": "600"}],
+                        "headline-lg-mobile": ["32px", {"lineHeight": "1.2", "fontWeight": "700"}],
+                        "body-md": ["18px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                        "headline-lg": ["48px", {"lineHeight": "1.2", "fontWeight": "700"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .glass-card {
+            background: rgba(242, 251, 255, 0.6);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(0, 163, 255, 0.1);
+        }
+        .hero-gradient {
+            background: radial-gradient(circle at 80% 20%, rgba(0, 163, 255, 0.08) 0%, transparent 40%);
+        }
+        .coffee-motif {
+            background-image: radial-gradient(circle, rgba(0, 98, 157, 0.03) 1px, transparent 1px);
+            background-size: 24px 24px;
+        }
+    </style>
+</head>
+<body class="bg-surface text-on-surface font-body-md selection:bg-primary-container selection:text-on-primary-container">
+<!-- TopAppBar -->
+<header class="bg-surface/80 backdrop-blur-md sticky top-0 z-50 border-b border-outline-variant/30 shadow-sm">
+<nav class="flex justify-between items-center px-gutter py-4 max-w-container-max-width mx-auto">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-3xl">code</span>
+<span class="font-headline-lg text-headline-lg tracking-tighter text-on-surface">MY PORTFOLIO</span>
+</div>
+<div class="hidden md:flex items-center gap-8 font-nav-link text-nav-link">
+<a class="text-primary border-b-2 border-primary pb-1" href="#home">Home</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors" href="#projects">My Projects</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors" href="#tools">Tools</a>
+<a class="px-6 py-2 bg-primary text-on-primary rounded-full hover:scale-105 transition-transform active:scale-95 shadow-sm" href="#contact">Contact</a>
+</div>
+<!-- Mobile Menu Toggle -->
+<button class="md:hidden text-on-surface">
+<span class="material-symbols-outlined">menu</span>
+</button>
+</nav>
+</header>
+<main>
+<!-- Hero Section -->
+<section class="relative overflow-hidden pt-24 pb-32 md:pt-32 md:pb-48 hero-gradient" id="home">
+<div class="max-w-container-max-width mx-auto px-gutter grid grid-cols-1 md:grid-cols-2 items-center gap-16">
+<div class="order-2 md:order-1 space-y-8">
+<div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary-container/10 border border-primary/20 text-primary font-label-mono text-label-mono">
+<span class="relative flex h-2 w-2">
+<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
+<span class="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
+</span>
+                        Available for hire
+                    </div>
+<div class="space-y-4">
+<h1 class="font-headline-xl text-headline-xl">
+                            I'm <span class="text-primary">Adesorm Cabanisan</span>,<br/>
+                            Web Developer
+                        </h1>
+<p class="text-on-surface-variant max-w-lg leading-relaxed">
+                            Crafting high-performance web applications with a blend of technical precision and creative design. I turn complex problems into elegant, coffee-fueled solutions.
+                        </p>
+</div>
+<div class="flex flex-wrap gap-4 pt-4">
+<a class="px-8 py-4 bg-primary text-on-primary rounded-lg font-nav-link text-nav-link hover:scale-105 transition-all duration-300 shadow-[0_10px_20px_-10px_rgba(0,98,157,0.3)]" href="#projects">
+                            View Portfolio
+                        </a>
+<a class="px-8 py-4 border-2 border-primary text-primary rounded-lg font-nav-link text-nav-link hover:bg-primary/5 transition-all" href="#contact">
+                            Let's Talk
+                        </a>
+</div>
+</div>
+<div class="order-1 md:order-2 relative">
+<div class="absolute inset-0 bg-primary/10 rounded-full blur-3xl -z-10"></div>
+<div class="relative rounded-3xl overflow-hidden border-4 border-white shadow-2xl">
+<img alt="" class="w-full h-auto aspect-square object-cover" data-alt="A professional yet creative portrait of a modern web developer in a bright, clean office setting. The lighting is soft and airy, typical of a high-end tech workspace. The composition follows a minimalist aesthetic with subtle blue accents in the background, matching a light-mode UI design system. The subject conveys a friendly, approachable, and highly competent persona, perfectly blending professionalism with a casual, modern vibe." src="https://lh3.googleusercontent.com/aida/ADBb0ugyvrwo8pZIeOKU4UsQzACYe5R6XeM_GZdx4iwjfLefAtu-vzpat8iWTisvyxOAXsKNyV5OFoATuV7JlL4W8gTEX1qPAQvkAO4xJX1Ubdg9PE67yRkJ0XZ9MuUtjZrZRiuV2PWdVMs_Wzv6vff6uMa1tqfpEEK_odUp59MCtc3TKMm4xv88b8dn-0VOXiz3b4j6oiwz-wtV0gLfuTNkkdWl0nwm-NbJui2Aa6sofAj5dC2P8ArvXBZl57o"/>
+</div>
+<!-- Abstract Brackets Decor -->
+<span class="absolute -top-8 -left-8 text-[120px] font-light text-primary/10 select-none">{</span>
+<span class="absolute -bottom-8 -right-8 text-[120px] font-light text-primary/10 select-none">}</span>
+</div>
+</div>
+</section>
+<!-- Projects Section -->
+<section class="py-section-padding-desktop bg-surface-container-lowest relative" id="projects">
+<div class="max-w-container-max-width mx-auto px-gutter">
+<div class="flex flex-col items-center mb-16 space-y-4">
+<span class="font-label-mono text-label-mono text-primary uppercase tracking-widest">// Featured Work</span>
+<h2 class="font-headline-lg text-headline-lg text-center">My Projects</h2>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+<!-- Project 1 -->
+<div class="group flex flex-col bg-surface-container-low rounded-xl overflow-hidden border border-outline-variant/20 hover:border-primary/30 transition-all duration-500 hover:-translate-y-2 hover:shadow-xl">
+<div class="relative overflow-hidden aspect-video bg-secondary-container">
+<img alt="" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" data-alt="A high-fidelity dashboard interface for a data analytics platform called Nebula Analytics. The UI features sleek glassmorphism panels, vibrant blue and teal data visualizations, and clean sans-serif typography. The overall aesthetic is professional, modern, and data-driven, set against a pristine light-mode background with soft atmospheric glow." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBEeld6rTWlF7OdkZPIV-kBM1AAgLvdaU54HGVHvWD67StJhCQ8sq0XkUsAFIrDLRKaZLIMGGl7-q7_jv5HaZki-1g_IgNDynTYU4h1m8uhTw4nC39lqjabLfbfoATNcc_3sTRgeLrsv_HIyBTeTZh4ojzSdNy5kaQh3pU20jG70RF8HpJs53kFcfXlLnTgs9JQmzgtK8ncP2HOfRGfYOYi9cc5kxmPi8uoo94E2scS0sOXIM89zTxu-gLJdtKjdjPoHGs2LphcsYE"/>
+<div class="absolute top-4 left-4">
+<span class="bg-primary/90 text-on-primary font-label-mono text-[10px] px-3 py-1 rounded-full uppercase tracking-tighter backdrop-blur-md">Analytics</span>
+</div>
+</div>
+<div class="p-8 space-y-4 flex flex-col flex-grow">
+<h3 class="font-headline-lg text-2xl font-bold">Nebula Analytics</h3>
+<p class="text-on-surface-variant text-sm line-clamp-3">A real-time data visualization engine designed for SaaS enterprises to monitor cloud performance metrics.</p>
+<div class="mt-auto pt-4 flex flex-wrap gap-2">
+<span class="px-3 py-1 bg-surface-container-highest rounded text-xs font-label-mono text-secondary">React</span>
+<span class="px-3 py-1 bg-surface-container-highest rounded text-xs font-label-mono text-secondary">D3.js</span>
+<span class="px-3 py-1 bg-surface-container-highest rounded text-xs font-label-mono text-secondary">TypeScript</span>
+</div>
+</div>
+</div>
+<!-- Project 2 -->
+<div class="group flex flex-col bg-surface-container-low rounded-xl overflow-hidden border border-outline-variant/20 hover:border-primary/30 transition-all duration-500 hover:-translate-y-2 hover:shadow-xl">
+<div class="relative overflow-hidden aspect-video bg-secondary-container">
+<img alt="" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" data-alt="A minimalist and premium e-commerce storefront design for Lumina Store. The layout is spacious with large product imagery, elegant typography, and a sophisticated color palette of whites and soft blues. The UI emphasizes high-end fashion and lifestyle products, conveying a sense of quality and modern sophistication." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAAHhm7-X3RzxTMjymFtM4iPIEWG-NEiYGJYNrKSZWtxAGUQaq0LMcDE3LrsMeKMUZjvPWv_PLtiBTEKBbul50AeSs7cmjXQTlFei2yyQrnH2u_cnR6f3cMazhVgiInkA1J1CCZAvPURPPk3jnw3pLwBdhDXrXAlH4IOBhR4h6rl4Ge-5YYa0XCibq0UHxYAXoXnFt0ztn2c3QewCijRxcF4Y_2HQeDk7PFRC2-g6VMyZDoPaIEJ-aVs4rfahpsJC3XKhiZOB-jsyY"/>
+<div class="absolute top-4 left-4">
+<span class="bg-primary/90 text-on-primary font-label-mono text-[10px] px-3 py-1 rounded-full uppercase tracking-tighter backdrop-blur-md">E-Commerce</span>
+</div>
+</div>
+<div class="p-8 space-y-4 flex flex-col flex-grow">
+<h3 class="font-headline-lg text-2xl font-bold">Lumina Store</h3>
+<p class="text-on-surface-variant text-sm line-clamp-3">High-end headless commerce storefront focused on accessibility and lightning-fast core web vitals.</p>
+<div class="mt-auto pt-4 flex flex-wrap gap-2">
+<span class="px-3 py-1 bg-surface-container-highest rounded text-xs font-label-mono text-secondary">Next.js</span>
+<span class="px-3 py-1 bg-surface-container-highest rounded text-xs font-label-mono text-secondary">Tailwind</span>
+<span class="px-3 py-1 bg-surface-container-highest rounded text-xs font-label-mono text-secondary">Stripe</span>
+</div>
+</div>
+</div>
+<!-- Project 3 -->
+<div class="group flex flex-col bg-surface-container-low rounded-xl overflow-hidden border border-outline-variant/20 hover:border-primary/30 transition-all duration-500 hover:-translate-y-2 hover:shadow-xl">
+<div class="relative overflow-hidden aspect-video bg-secondary-container">
+<img alt="" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" data-alt="A clean and professional CRM interface called AeroFlow CRM. The design focuses on workflow efficiency with organized task boards, client contact lists, and performance charts. The color scheme is predominantly light blue and neutral slate, creating a focused and reliable atmosphere for business management." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD96qfde9iHwXGab8PkiX5DMjN7a94-XrJRvA8XcnH163lCTWSVTMS-AuGK8SuGsYfrIImCDLpiyRjMyJvmjFpgSTMJ7M40G0ngRgfbHraukj119lOGlvWkC-eGkyW0t-uqze9v11q8LgrRXDY9QJavuTx3TfKTackI7kCGAwNnpqWf-fko23WoJJprkJ_xrA8h-rqVnwYBgEirVVSO7ziXQABMgu4nM2wpxtrXDquSB1o63IQjVYPMQQBaI0sPas4CdIfjZ988Kko"/>
+<div class="absolute top-4 left-4">
+<span class="bg-primary/90 text-on-primary font-label-mono text-[10px] px-3 py-1 rounded-full uppercase tracking-tighter backdrop-blur-md">Saas</span>
+</div>
+</div>
+<div class="p-8 space-y-4 flex flex-col flex-grow">
+<h3 class="font-headline-lg text-2xl font-bold">AeroFlow CRM</h3>
+<p class="text-on-surface-variant text-sm line-clamp-3">A streamlined customer relationship management tool for boutique creative agencies to track projects and billing.</p>
+<div class="mt-auto pt-4 flex flex-wrap gap-2">
+<span class="px-3 py-1 bg-surface-container-highest rounded text-xs font-label-mono text-secondary">Node.js</span>
+<span class="px-3 py-1 bg-surface-container-highest rounded text-xs font-label-mono text-secondary">PostgreSQL</span>
+<span class="px-3 py-1 bg-surface-container-highest rounded text-xs font-label-mono text-secondary">GraphQL</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Digital Toolbox Section -->
+<section class="py-section-padding-desktop bg-surface relative overflow-hidden" id="tools">
+<div class="max-w-container-max-width mx-auto px-gutter">
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+<div>
+<span class="font-label-mono text-label-mono text-primary uppercase tracking-widest mb-4 block">// The Stack</span>
+<h2 class="font-headline-lg text-headline-lg mb-8">My Digital Toolbox</h2>
+<p class="text-on-surface-variant leading-relaxed mb-10">
+                            I specialize in modern JavaScript ecosystems, building robust backends and reactive frontends. My toolset is chosen for scalability, developer experience, and end-user performance.
+                        </p>
+<div class="flex flex-wrap gap-3">
+<span class="px-4 py-2 bg-primary-container/10 border border-primary/10 rounded-full font-label-mono text-primary text-sm">TypeScript</span>
+<span class="px-4 py-2 bg-primary-container/10 border border-primary/10 rounded-full font-label-mono text-primary text-sm">React Native</span>
+<span class="px-4 py-2 bg-primary-container/10 border border-primary/10 rounded-full font-label-mono text-primary text-sm">Node.js</span>
+<span class="px-4 py-2 bg-primary-container/10 border border-primary/10 rounded-full font-label-mono text-primary text-sm">PostgreSQL</span>
+<span class="px-4 py-2 bg-primary-container/10 border border-primary/10 rounded-full font-label-mono text-primary text-sm">Docker</span>
+<span class="px-4 py-2 bg-primary-container/10 border border-primary/10 rounded-full font-label-mono text-primary text-sm">AWS</span>
+<span class="px-4 py-2 bg-primary-container/10 border border-primary/10 rounded-full font-label-mono text-primary text-sm">Figma</span>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-4">
+<div class="space-y-4 pt-8">
+<div class="glass-card p-6 rounded-2xl flex flex-col gap-4">
+<span class="material-symbols-outlined text-primary text-4xl">terminal</span>
+<h4 class="font-bold">Frontend</h4>
+<p class="text-xs text-on-surface-variant">Building immersive UIs with React and Next.js, focusing on pixel-perfection.</p>
+</div>
+<div class="glass-card p-6 rounded-2xl flex flex-col gap-4">
+<span class="material-symbols-outlined text-primary text-4xl">database</span>
+<h4 class="font-bold">Architecture</h4>
+<p class="text-xs text-on-surface-variant">Designing scalable database schemas and microservices for heavy loads.</p>
+</div>
+</div>
+<div class="space-y-4">
+<div class="glass-card p-6 rounded-2xl flex flex-col gap-4">
+<span class="material-symbols-outlined text-primary text-4xl">smartphone</span>
+<h4 class="font-bold">Mobile</h4>
+<p class="text-xs text-on-surface-variant">Cross-platform development with React Native for iOS and Android.</p>
+</div>
+<div class="glass-card p-6 rounded-2xl flex flex-col gap-4">
+<span class="material-symbols-outlined text-primary text-4xl">cloud_done</span>
+<h4 class="font-bold">DevOps</h4>
+<p class="text-xs text-on-surface-variant">Automating deployments with CI/CD pipelines and container orchestration.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Contact Section -->
+<section class="py-section-padding-desktop coffee-motif bg-surface-container-high/30" id="contact">
+<div class="max-w-container-max-width mx-auto px-gutter">
+<div class="bg-white rounded-3xl p-8 md:p-16 shadow-xl border border-outline-variant/10 relative overflow-hidden">
+<!-- Coffee abstract decor -->
+<div class="absolute -right-20 -bottom-20 w-80 h-80 bg-primary/5 rounded-full blur-3xl"></div>
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-16 relative z-10">
+<div class="space-y-8">
+<h2 class="font-headline-lg text-headline-lg">Let's talk over coffee</h2>
+<p class="text-on-surface-variant max-w-md">
+                                Have a project in mind or just want to chat about the latest tech? My inbox is always open.
+                            </p>
+<div class="space-y-6 pt-4">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">mail</span>
+</div>
+<div>
+<p class="text-xs font-label-mono text-on-surface-variant uppercase">Email me</p>
+<p class="font-semibold">hello@adesorm.dev</p>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">location_on</span>
+</div>
+<div>
+<p class="text-xs font-label-mono text-on-surface-variant uppercase">Location</p>
+<p class="font-semibold">Manila, Philippines</p>
+</div>
+</div>
+</div>
+</div>
+<form class="space-y-6" onsubmit="event.preventDefault()">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<div class="space-y-2">
+<label class="font-label-mono text-xs uppercase text-on-surface-variant">Name</label>
+<input class="w-full bg-surface border border-outline-variant/30 rounded-lg px-4 py-3 focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all" placeholder="John Doe" type="text"/>
+</div>
+<div class="space-y-2">
+<label class="font-label-mono text-xs uppercase text-on-surface-variant">Email</label>
+<input class="w-full bg-surface border border-outline-variant/30 rounded-lg px-4 py-3 focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all" placeholder="john@example.com" type="email"/>
+</div>
+</div>
+<div class="space-y-2">
+<label class="font-label-mono text-xs uppercase text-on-surface-variant">Message</label>
+<textarea class="w-full bg-surface border border-outline-variant/30 rounded-lg px-4 py-3 focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all" placeholder="Tell me about your project..." rows="4"></textarea>
+</div>
+<button class="w-full py-4 bg-primary text-on-primary rounded-lg font-bold hover:bg-primary/90 transition-colors shadow-lg active:scale-[0.98]">
+                                Send Message
+                            </button>
+</form>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="bg-surface-container-low border-t border-outline-variant/20 py-16">
+<div class="flex flex-col md:flex-row justify-between items-center gap-8 px-gutter max-w-container-max-width mx-auto">
+<div class="flex flex-col items-center md:items-start gap-4">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary">code</span>
+<span class="font-label-mono text-label-mono text-secondary">ADESORM CABANISAN</span>
+</div>
+<p class="text-on-surface-variant text-body-md font-body-md text-sm">© 2024 Adesorm Cabanisan • Built with Coffee &amp; Code</p>
+</div>
+<div class="flex gap-8 text-on-surface-variant font-body-md text-body-md">
+<a class="hover:text-primary hover:underline decoration-primary/30 underline-offset-4 transition-all" href="#home">Home</a>
+<a class="hover:text-primary hover:underline decoration-primary/30 underline-offset-4 transition-all" href="#projects">My Projects</a>
+<a class="hover:text-primary hover:underline decoration-primary/30 underline-offset-4 transition-all" href="#tools">Tools</a>
+<a class="hover:text-primary hover:underline decoration-primary/30 underline-offset-4 transition-all" href="#contact">Contact</a>
+</div>
+<div class="flex gap-4">
+<a class="w-10 h-10 rounded-full bg-surface flex items-center justify-center hover:text-primary transition-colors border border-outline-variant/10" href="#">
+<span class="material-symbols-outlined text-xl">share</span>
+</a>
+<a class="w-10 h-10 rounded-full bg-surface flex items-center justify-center hover:text-primary transition-colors border border-outline-variant/10" href="#">
+<span class="material-symbols-outlined text-xl">code_blocks</span>
+</a>
+</div>
+</div>
+</footer>
+<script>
+        // Simple scroll spy for active navigation
+        window.addEventListener('scroll', () => {
+            const sections = document.querySelectorAll('section');
+            const navLinks = document.querySelectorAll('nav .hidden a');
+            
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                if (pageYOffset >= sectionTop - 100) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            navLinks.forEach(link => {
+                link.classList.remove('text-primary', 'border-b-2', 'border-primary', 'pb-1');
+                link.classList.add('text-on-surface-variant');
+                if (link.getAttribute('href').includes(current)) {
+                    link.classList.add('text-primary', 'border-b-2', 'border-primary', 'pb-1');
+                    link.classList.remove('text-on-surface-variant');
+                }
+            });
+        });
+    </script>
+</body></html>

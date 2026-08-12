@@ -1,0 +1,22 @@
+.glass-card {
+  background: rgba(242, 251, 255, 0.6);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(0, 163, 255, 0.1);
+}
+
+.hero-gradient {
+  background: radial-gradient(
+    circle at 80% 20%,
+    rgba(0, 163, 255, 0.08) 0%,
+    transparent 40%
+  );
+}
+
+.coffee-motif {
+  background-image: radial-gradient(
+    circle,
+    rgba(0, 98, 157, 0.03) 1px,
+    transparent 1px
+  );
+  background-size: 24px 24px;
+}

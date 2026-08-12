@@ -7,24 +7,7 @@ export default async function handler(req, res) {
   }
 
   try {
-    const { name, email, message, recaptchaToken } = req.body || {};
-
-    // Check environment variables first
-    if (!process.env.RECAPTCHA_SECRET_KEY) {
-      console.error("RECAPTCHA_SECRET_KEY is missing");
-      return res.status(500).json({
-        success: false,
-        message: "RECAPTCHA_SECRET_KEY is not configured on Vercel.",
-      });
-    }
-
-    if (!process.env.WEB3FORMS_ACCESS_KEY) {
-      console.error("WEB3FORMS_ACCESS_KEY is missing");
-      return res.status(500).json({
-        success: false,
-        message: "WEB3FORMS_ACCESS_KEY is not configured on Vercel.",
-      });
-    }
+    const { name, email, message, recaptchaToken } = req.body;
 
     // Basic validation
     if (!name || !email || !message || !recaptchaToken) {
@@ -35,7 +18,7 @@ export default async function handler(req, res) {
     }
 
     // ==========================================
-    // 1. VERIFY reCAPTCHA WITH GOOGLE
+    // 1. VERIFY reCAPTCHA
     // ==========================================
 
     const googleResponse = await fetch(
@@ -54,19 +37,19 @@ export default async function handler(req, res) {
 
     const googleText = await googleResponse.text();
 
-    console.log("Google reCAPTCHA HTTP status:", googleResponse.status);
-    console.log("Google reCAPTCHA response:", googleText);
+    console.log("Google status:", googleResponse.status);
+    console.log("Google response:", googleText);
 
     let googleResult;
 
     try {
       googleResult = JSON.parse(googleText);
     } catch (error) {
-      console.error("Google returned invalid JSON:", googleText);
+      console.error("Google returned non-JSON:", googleText);
 
       return res.status(500).json({
         success: false,
-        message: "Invalid response from Google reCAPTCHA.",
+        message: "Google reCAPTCHA verification returned an invalid response.",
       });
     }
 
@@ -75,13 +58,12 @@ export default async function handler(req, res) {
 
       return res.status(400).json({
         success: false,
-        message: "reCAPTCHA verification failed.",
-        details: googleResult["error-codes"] || [],
+        message: "reCAPTCHA verification failed. Please try again.",
       });
     }
 
     // ==========================================
-    // 2. SEND MESSAGE THROUGH WEB3FORMS
+    // 2. SEND THROUGH WEB3FORMS
     // ==========================================
 
     const web3Response = await fetch("https://api.web3forms.com/submit", {
@@ -101,7 +83,7 @@ export default async function handler(req, res) {
 
     const web3Text = await web3Response.text();
 
-    console.log("Web3Forms HTTP status:", web3Response.status);
+    console.log("Web3Forms status:", web3Response.status);
     console.log("Web3Forms response:", web3Text);
 
     let web3Result;
@@ -109,11 +91,11 @@ export default async function handler(req, res) {
     try {
       web3Result = JSON.parse(web3Text);
     } catch (error) {
-      console.error("Web3Forms returned invalid JSON:", web3Text);
+      console.error("Web3Forms returned non-JSON:", web3Text);
 
       return res.status(500).json({
         success: false,
-        message: "Invalid response from Web3Forms.",
+        message: "Web3Forms returned an invalid response.",
       });
     }
 
@@ -135,11 +117,11 @@ export default async function handler(req, res) {
       message: "Message sent successfully!",
     });
   } catch (error) {
-    console.error("CONTACT API CRASH:", error);
+    console.error("Contact API error:", error);
 
     return res.status(500).json({
       success: false,
-      message: error?.message || "Server error. Please try again later.",
+      message: "Server error. Please try again later.",
     });
   }
 }
